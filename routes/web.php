@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'HomeController@index')->name('home');
+Route::get('/form', 'FormController@showForm')->name('form');
+Route::post('/form', 'FormController@processForm')->name('form.submit');
+Route::get('/data', 'DataController@showData')->name('data');
