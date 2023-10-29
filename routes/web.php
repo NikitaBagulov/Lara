@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', 'HomeController@index')->name('home');
-Route::get('/form', 'FormController@showForm')->name('form');
-Route::post('/form', 'FormController@processForm')->name('form.submit');
-Route::get('/data', 'DataController@showData')->name('data');
+Route::get('/', [Controllers\HomeController::class, 'index']);
+Route::get('/form', [Controllers\FormController::class, 'show_form']);
+Route::post('/form', [Controllers\FormController::class, 'process_form']);
+Route::get('/data', [Controllers\DataController::class, 'show_data']);

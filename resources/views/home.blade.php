@@ -1,10 +1,1 @@
-<table>
-    <tr>
-        <th>Form</th>
-        <th>Data</th>
-    </tr>
-    <tr>
-        <td>/form</td>
-        <td>/data</td>
-    </tr>
-</table>
+@extends('layout')
