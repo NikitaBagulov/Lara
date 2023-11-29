@@ -14,7 +14,29 @@ use App\Http\Controllers;
 |
 */
 
-Route::get('/', [Controllers\HomeController::class, 'index']);
-Route::get('/form', [Controllers\FormController::class, 'show_form']);
-Route::post('/form', [Controllers\FormController::class, 'process_form']);
-Route::get('/data', [Controllers\DataController::class, 'show_data']);
+Route::get('/', [Controllers\PostController::class, 'index']);
+
+Route::get('/users/add', [Controllers\UserController::class,'add']);
+Route::get('/users', [Controllers\UserController::class, 'index']);
+Route::get('/users/{id}', [Controllers\UserController::class,'show']);
+Route::post('/users', [Controllers\UserController::class,'store']); 
+Route::get('/users/{id}/edit', [Controllers\UserController::class,'edit']); 
+Route::post('/users/{id}', [Controllers\UserController::class,'update']);
+Route::delete('/users/{id}/delete', [Controllers\UserController::class,'destroy']);
+
+Route::post('/users/{user}/posts/{post}', [Controllers\PostController::class, 'update']);
+Route::get('/users/{user}/posts_create', [Controllers\PostController::class, 'create']);
+// Route::get('/users/{user}/posts/{post}', [Controllers\PostController::class, 'show']);
+Route::post('/users/{user}/posts', [Controllers\PostController::class, 'store']);
+Route::get('/users/{user}/posts/{post}/edit', [Controllers\PostController::class, 'edit']);
+Route::delete('/users/{user}/posts/{post}/delete', [Controllers\PostController::class,'destroy']);
+
+Route::get('/users/{user}/posts/{post}/create_com', [Controllers\CommentController::class, 'create']);
+Route::post('/users/{user}/posts/{post}/create_com', [Controllers\CommentController::class, 'store']);
+
+Route::get("/posts", [Controllers\PostController::class, 'get_json']);
+
+// Route::post('/form', [Controllers\UserController::class, 'process_form']);
+// Route::post('/data', [Controllers\DataController::class, 'show_data']);
+
+
