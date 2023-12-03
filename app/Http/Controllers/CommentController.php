@@ -8,6 +8,11 @@ use App\Comment;
 
 class CommentController extends Controller
 {
+
+    public function index(){
+        $comments = Comment::orderBy("created_at","desc")->paginate(10);
+        return view("comments.comments", compact("comments"));
+    }
     public function create($userId, $postId){
         return view("comments.create",compact("userId","postId"));
     }
@@ -23,7 +28,8 @@ class CommentController extends Controller
                 'commentable_id' => $postId,
                 'content' => $request->input('content'),
                 'created_at' => Carbon::now(),
-                'updated_at'=> Carbon::now()
+                'updated_at'=> Carbon::now(),
+                'approved' => false
             ]);
             $com->save();
             return redirect("/")->with('success','Отзыв к посту добавлен');
@@ -33,10 +39,31 @@ class CommentController extends Controller
                 'commentable_id' => $userId,
                 'content' => $request->input('content'),
                 'created_at' => Carbon::now(),
-                'updated_at'=> Carbon::now()
+                'updated_at'=> Carbon::now(),
+                'approved' => false
             ]);
             $com->save();
             return redirect("/users/".$userId)->with('success','Отзыв к пользователю добавлен');
         }
     }
+
+    public function approve($commentId)
+    {
+        $comment = Comment::findOrFail($commentId);
+        $comment->approved = true;
+        $comment->save();
+
+        return redirect()->back()->with('success', 'Комментарий одобрен');
+    }
+
+    public function reject($commentId)
+    {
+        $comment = Comment::findOrFail($commentId);
+        $comment->approved = false;
+        $comment->save();
+
+        return redirect()->back()->with('success', 'Комментарий не одобрен');
+    }
+
+
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Post;
 use App\User;
 use App\Comment;
+use App\Events\PostCreated;
 use Illuminate\Http\Request;
 use App\Http\Resources\PostResource;
 
@@ -31,7 +32,7 @@ class PostController extends Controller
         $request->validate([
             'title' => 'required',
             'content' => 'required'
-        ],[
+        ], [
             'title.required' => 'Необходимо названия поста',
             'content.required' => 'Необходим контент'
         ]);
@@ -42,8 +43,9 @@ class PostController extends Controller
         ]);
 
         $user->posts()->save($post); // Связываем пост с пользователем
+        event(new PostCreated($post));
 
-        return redirect('/users/'.$userId)->with('success', 'Пост успешно создан');
+        return redirect('/users/' . $userId)->with('success', 'Пост успешно создан');
     }
     public function show($userId, $postId)
     {
@@ -59,7 +61,7 @@ class PostController extends Controller
         return view('posts.edit', compact('post'));
     }
 
-    public function update( $userId, $postId, Request $request)
+    public function update($userId, $postId, Request $request)
     {
         $post = Post::findOrFail($postId);
 
@@ -70,17 +72,36 @@ class PostController extends Controller
 
         $post->update($validatedData);
         // return $post;
-        return redirect('/users/'.$userId)->with('success', 'Пост успешно обновлен');
+        return redirect('/users/' . $userId)->with('success', 'Пост успешно обновлен');
         // return back()->with('success', 'Пост успешно обновлен');
     }
 
-    public function destroy($userId, $postId){
+    public function destroy($userId, $postId)
+    {
         $post = Post::findOrFail($postId);
         $post->delete();
-        return redirect('/users/'.$userId)->with('message','Элемент удален!');
+        return redirect('/users/' . $userId)->with('message', 'Элемент удален!');
     }
 
-    public function get_json(){
+    public function publish($userId, $postId)
+    {
+        $post = Post::findOrFail($postId);
+        $post->is_published = true;
+        $post->publish_at = now();
+        $post->save();
+        return redirect('/users/' . $userId)->with('success', 'Пост успешно опубликован');
+    }
+
+    public function unpublish($userId, $postId)
+    {
+        $post = Post::findOrFail($postId);
+        $post->is_published = false;
+        $post->save();
+        return redirect('/users/' . $userId)->with('success', 'Пост снят с публикации');
+    }
+
+    public function get_json()
+    {
         return PostResource::collection(Post::all());
     }
 }

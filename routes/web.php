@@ -30,11 +30,17 @@ Route::get('/users/{user}/posts_create', [Controllers\PostController::class, 'cr
 Route::post('/users/{user}/posts', [Controllers\PostController::class, 'store']);
 Route::get('/users/{user}/posts/{post}/edit', [Controllers\PostController::class, 'edit']);
 Route::delete('/users/{user}/posts/{post}/delete', [Controllers\PostController::class,'destroy']);
+Route::post('users/{user}/posts/{post}/publish', [Controllers\PostController::class,'publish']);
+Route::post('users/{user}/posts/{post}/unpublish', [Controllers\PostController::class,'unpublish']);
 
 Route::get('/users/{user}/posts/{post}/create_com', [Controllers\CommentController::class, 'create']);
 Route::post('/users/{user}/posts/{post}/create_com', [Controllers\CommentController::class, 'store']);
 
 Route::get("/posts", [Controllers\PostController::class, 'get_json']);
+
+Route::get('/comments', [Controllers\CommentController::class, 'index']);
+Route::post('/comments/{commentId}/approve',[Controllers\CommentController::class,'approve']);
+Route::post('/comments/{commentId}/reject', [Controllers\CommentController::class,'reject']);
 
 // Route::post('/form', [Controllers\UserController::class, 'process_form']);
 // Route::post('/data', [Controllers\DataController::class, 'show_data']);
