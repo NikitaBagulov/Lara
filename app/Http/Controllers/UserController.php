@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\UserValidation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\User;
@@ -31,22 +32,8 @@ use App\Comment;
         }
 
         public function store(Request $request){
-            $validatedData = $request->validate([
-                'name' => 'required|min:2',
-                'lastname' => 'required',
-                'age' => 'required|numeric|min:12|max:120',
-                'city' => 'required',
-                'email' => 'required|email',
-            ], [
-                'name.required' => 'Представтесь',
-                'name.min' => 'Не бывает таких маленьких имен',
-                'age.required' => 'Сколько вам лет?',
-                'age.min' => 'Малый ты, вырости до :min лет',
-                'age.max' => 'Слишком старый, :max это максимум',
-                'lastname.required' => 'Фамилии нет',
-                'email.required' => 'Забыли email',
-                'email.email' => 'Не похоже на Email'
-            ]);
+
+            event(new UserValidation($request));
 
             $user = new User([
                 'name' => $request->input('name'),
@@ -74,22 +61,7 @@ use App\Comment;
 
         public function update(Request $request, $id){
             $user = User::findOrFail($id);
-            $validatedData = $request->validate([
-                'name' => 'required|min:2',
-                'lastname' => 'required',
-                'age' => 'required|numeric|min:12|max:120',
-                'city' => 'required',
-                'email' => 'required|email',
-            ], [
-                'name.required' => 'Представтесь',
-                'name.min' => 'Не бывает таких маленьких имен',
-                'age.required' => 'Сколько вам лет?',
-                'age.min' => 'Малый ты, вырости до :min лет',
-                'age.max' => 'Слишком старый, :max это максимум',
-                'lastname.required' => 'Фамилии нет',
-                'email.required' => 'Забыли email',
-                'email.email' => 'Не похоже на Email'
-            ]);
+            event(new UserValidation($request));
 
             $user->update([
                 'name' => $request->input('name'),

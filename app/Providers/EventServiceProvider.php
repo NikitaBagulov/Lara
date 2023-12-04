@@ -20,6 +20,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         'App\Events\PostCreated' => [
             'App\Listeners\LogPostCreation',
+        ],
+        'App\Events\UserValidation' =>[
+            'App\Listeners\ValidateUserData',
         ]
     ];
 
