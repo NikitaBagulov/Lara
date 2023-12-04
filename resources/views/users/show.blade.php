@@ -1,6 +1,4 @@
-@extends('layout')
-
-@section('content')
+<!-- Посты пользователя -->
 <h1>Информация о пользователе</h1>
 <p>Name: {{ $user->name }}</p>
 <p>Lastname: {{ $user->lastname }}</p>
@@ -18,33 +16,48 @@
     <p>У этого пользователя нет отзывов.</p>
     @else
     @foreach ($comment as $com)
+    @if ($com->approved == true)
     <li>
         <p>{{ $com->content }}</p>
     </li>
+    @endif
     @endforeach
 </ul>
 
 @endif
 
-<!-- Посты пользователя -->
 <h2>Посты пользователя:</h2>
 @if ($user->posts->isEmpty())
 <ul>
     <p>У этого пользователя нет постов.</p>
-    @else
+</ul>
+@else
+<ul>
     @foreach ($user->posts as $post)
     <li>
         <h3>{{ $post->title }}</h3>
         <p>{{ $post->content }}</p>
+        @if($post->is_published)
+        <!-- Если пост опубликован -->
+        <form method="POST" action="/users/{{$post->user_id}}/posts/{{$post->id}}/unpublish">
+            @csrf
+            <button type="submit">Снять с публикации</button>
+        </form>
+        @else
+        <!-- Если пост не опубликован -->
+        <form method="POST" action="/users/{{$post->user_id}}/posts/{{$post->id}}/publish">
+            @csrf
+            <button type="submit">Опубликовать</button>
+        </form>
+        @endif
+
         <a href="/users/{{$post->user_id}}/posts/{{$post->id}}/edit">Редактировать</a>
         <form method="POST" action="/users/{{$post->user_id}}/posts/{{$post->id}}/delete">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit">Удалить</button>
-                        </form>
+            @csrf
+            @method('DELETE')
+            <button type="submit">Удалить</button>
+        </form>
     </li>
     @endforeach
 </ul>
-
 @endif
-@endsection

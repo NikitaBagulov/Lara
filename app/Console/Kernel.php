@@ -24,7 +24,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        $schedule->command('posts:publish')->everyMinute();
+        //c:\OSPanel\modules\php\PHP_7.2\php.exe c:\OSPanel\domains\myproject\artisan schedule:run >> NUL 2>&1
     }
 
     /**

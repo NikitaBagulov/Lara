@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Comment extends Model
 {
     use SoftDeletes;
-    protected $fillable = ['content', 'commentable_type', 'commentable_id'];
+    protected $fillable = ['content', 'commentable_type', 'commentable_id', 'approved'];
     protected $casts =[
         'content'=> 'string',
     ];
